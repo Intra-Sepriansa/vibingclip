@@ -1,0 +1,47 @@
+# OS
+.DS_Store
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Node / build artifacts
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editors
+.vscode/
+.idea/
+
+# Python caches & venvs
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# AI service env/venv
+vibingclip-ai/.env
+vibingclip-ai/.env.*
+!vibingclip-ai/.env.example
+vibingclip-ai/.venv/
+vibingclip-ai/python3.11/
+vibingclip-ai/atau/
+vibingclip-ai/\#/
+
+# Backend service artifacts
+vibingclip-be/.env
+vibingclip-be/.env.*
+!vibingclip-be/.env.example
+vibingclip-be/node_modules/
+vibingclip-be/dist/
+vibingclip-be/uploads/
+vibingclip-be/dump.rdb
+vibingclip-be/file:./

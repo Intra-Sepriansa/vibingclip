@@ -1,0 +1,51 @@
+@startuml usecase
+left to right direction
+skinparam shadowing false
+
+actor "Kreator Konten" as Creator
+actor "Layanan AI\n(FastAPI)" as AI
+actor "Worker Pemrosesan\n(BullMQ + FFmpeg)" as Worker
+
+rectangle "Vibing Clip Platform" {
+  usecase "Autentikasi pengguna\n(Daftar / Masuk / Refresh JWT)" as UC_Auth
+  usecase "Kelola profil & workspace\n(profil, notifikasi, penagihan)" as UC_Profile
+  usecase "Unggah video / tempel URL\nBuat proyek" as UC_Upload
+  usecase "Pantau status pemrosesan\n(riwayat job, log aktivitas)" as UC_Status
+  usecase "Tinjau daftar klip AI" as UC_Review
+  usecase "Edit timeline & caption klip\n(terapkan template & brand kit)" as UC_Edit
+  usecase "Ekspor / unduh klip" as UC_Export
+  usecase "Kelola template & brand kit" as UC_Templates
+  usecase "Lihat dasbor analitik\n(kinerja proyek & klip)" as UC_Analytics
+
+  rectangle "AI + Queue Pipeline" as Pipeline {
+    usecase "Ingest unggahan\n+ ekstrak metadata" as UC_Ingest
+    usecase "Transkripsi audio" as UC_Transcribe
+    usecase "Analisis transkrip\n& skor hook" as UC_Analyze
+    usecase "Render klip\n+ buat thumbnail" as UC_Render
+  }
+}
+
+Creator --> UC_Auth
+Creator --> UC_Profile
+Creator --> UC_Upload
+Creator --> UC_Status
+Creator --> UC_Review
+Creator --> UC_Edit
+Creator --> UC_Export
+Creator --> UC_Templates
+Creator --> UC_Analytics
+
+UC_Upload --> UC_Ingest : <<termasuk>>
+UC_Ingest --> UC_Transcribe : <<termasuk>>
+UC_Transcribe --> UC_Analyze : <<termasuk>>
+UC_Analyze --> UC_Render : <<termasuk>>
+UC_Render --> UC_Review : <<menghasilkan>>
+UC_Review --> UC_Edit : <<perhalus>>
+UC_Edit --> UC_Export : <<termasuk>>
+UC_Templates ..> UC_Edit : <<terapkan gaya>>
+UC_Status <.. UC_Render : <<memperbarui>>
+
+AI --> UC_Transcribe
+AI --> UC_Analyze
+Worker --> UC_Render
+@enduml

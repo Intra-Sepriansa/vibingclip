@@ -1,0 +1,67 @@
+@startuml
+skinparam activityDirection left to right
+skinparam shadowing false
+
+start
+
+partition "Kreator Konten" {
+  :Buka aplikasi web;
+  :Daftar / Masuk (JWT);
+}
+
+if (Autentikasi valid?) then (ya)
+else (tidak)
+  :Tolak akses & minta login ulang;
+  stop
+endif
+
+partition "Kreator Konten" {
+  :Unggah video atau tempel URL;
+  :Kirim buat proyek;
+}
+
+partition "Backend + Queue" {
+  :Validasi unggahan & simpan file;
+  :Buat entitas Proyek;
+  :Enqueue job ke BullMQ;
+  :Set status Menunggu;
+}
+
+partition "Kreator Konten" {
+  :Pantau status proses / log;
+}
+
+partition "Worker Pemrosesan" {
+  :Ambil job ingest;
+  :Ekstrak metadata;
+  :Panggil AI untuk transkripsi;
+}
+
+partition "Layanan AI (FastAPI)" {
+  :Transkripsi audio;
+  :Analisis transkrip & skor hook;
+}
+
+partition "Worker Pemrosesan" {
+  :Gabungkan hasil AI;
+  :Render klip + thumbnail (FFmpeg);
+  :Simpan klip & status job;
+}
+
+partition "Backend + Queue" {
+  :Perbarui status proyek = Selesai;
+  :Publikasikan daftar klip ke API;
+}
+
+partition "Kreator Konten" {
+  :Tinjau daftar klip AI;
+  repeat
+    :Edit timeline & caption;\nTerapkan template / brand kit;
+    :Pratinjau klip;
+  repeat while (Perlu revisi?) is (ya)
+  ->(tidak)
+  :Ekspor / unduh klip;
+}
+
+stop
+@enduml
