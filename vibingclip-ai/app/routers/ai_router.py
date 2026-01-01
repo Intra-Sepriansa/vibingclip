@@ -16,14 +16,22 @@ router = APIRouter(prefix='/api/v1')
 logger = get_logger(__name__)
 
 # Instantiate services (simple DI for now)
-stt_service = SttService()
-llm_client = LlmClient()
+try:
+    stt_service = SttService()
+    llm_client = LlmClient()
+except Exception as exc:
+    logger.error("AI service initialization failed: %s", exc)
+    stt_service = None
+    llm_client = None
+
 scoring_service = ScoringService()
-clip_analysis_service = ClipAnalysisService(llm_client, scoring_service)
+clip_analysis_service = ClipAnalysisService(llm_client, scoring_service) if llm_client else None
 
 
 @router.post('/transcribe', response_model=TranscribeResponse)
 async def transcribe(payload: TranscribeRequest):
+    if not stt_service:
+        raise HTTPException(status_code=503, detail="STT service not initialized; check LLM_API_KEY")
     try:
         result = await stt_service.transcribe(payload.filePath)
         return TranscribeResponse(**result)
@@ -34,6 +42,8 @@ async def transcribe(payload: TranscribeRequest):
 
 @router.post('/analyze/transcript', response_model=AnalyzeTranscriptResponse)
 async def analyze_transcript(payload: AnalyzeTranscriptRequest):
+    if not clip_analysis_service:
+        raise HTTPException(status_code=503, detail="Analysis service not initialized; check LLM_API_KEY")
     try:
         clips = await clip_analysis_service.suggest_clips(
             transcript=payload.transcript,

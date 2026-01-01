@@ -1,0 +1,38 @@
+<svg width="1200" height="720" viewBox="0 0 1200 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Vibing Clip analytics UI">
+  <defs>
+    <linearGradient id="analytics-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B1120"/>
+      <stop offset="50%" stop-color="#111827"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+    <linearGradient id="chart" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#22D3EE"/>
+      <stop offset="50%" stop-color="#A855F7"/>
+      <stop offset="100%" stop-color="#34D399"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="720" rx="36" fill="url(#analytics-bg)"/>
+  <rect x="60" y="50" width="1080" height="70" rx="24" fill="#0B0F1A" stroke="#1F2937"/>
+  <rect x="90" y="78" width="240" height="18" rx="9" fill="#E2E8F0"/>
+  <rect x="900" y="70" width="210" height="30" rx="15" fill="#1F2937"/>
+
+  <rect x="60" y="140" width="700" height="280" rx="28" fill="#0B0F1A" stroke="#1F2937"/>
+  <path d="M90 360 C180 280 280 310 360 250 C440 190 520 230 600 210 C660 198 710 220 730 200" fill="none" stroke="url(#chart)" stroke-width="6" stroke-linecap="round"/>
+  <path d="M90 390 C180 330 280 350 360 300 C440 260 520 290 600 280 C670 270 710 280 730 260" fill="none" stroke="#94A3B8" stroke-width="4" stroke-linecap="round" opacity="0.7"/>
+
+  <rect x="780" y="140" width="360" height="120" rx="24" fill="#111827" stroke="#1F2937"/>
+  <rect x="780" y="280" width="360" height="140" rx="24" fill="#111827" stroke="#1F2937"/>
+  <circle cx="840" cy="220" r="28" fill="#22D3EE"/>
+  <circle cx="940" cy="220" r="28" fill="#7C3AED"/>
+  <circle cx="1040" cy="220" r="28" fill="#34D399"/>
+
+  <rect x="60" y="450" width="520" height="220" rx="28" fill="#0B0F1A" stroke="#1F2937"/>
+  <rect x="610" y="450" width="530" height="220" rx="28" fill="#0B0F1A" stroke="#1F2937"/>
+  <rect x="100" y="560" width="120" height="80" rx="18" fill="#22D3EE"/>
+  <rect x="240" y="530" width="120" height="110" rx="18" fill="#7C3AED"/>
+  <rect x="380" y="590" width="120" height="50" rx="18" fill="#34D399"/>
+
+  <circle cx="720" cy="560" r="70" fill="#111827" stroke="#1F2937" stroke-width="10"/>
+  <path d="M720 490 A70 70 0 0 1 790 560" stroke="#22D3EE" stroke-width="10" fill="none"/>
+  <path d="M790 560 A70 70 0 0 1 720 630" stroke="#A855F7" stroke-width="10" fill="none"/>
+</svg>

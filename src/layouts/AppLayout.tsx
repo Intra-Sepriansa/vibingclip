@@ -1,7 +1,9 @@
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from '../components/common/Sidebar';
+import { useAuth } from '../context/AuthContext';
 
 export const AppLayout = () => {
+  const { user } = useAuth();
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
       <div className="flex">
@@ -11,7 +13,9 @@ export const AppLayout = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs uppercase tracking-[0.25em] text-slate-500">Workspace</p>
-                <p className="text-lg font-semibold text-white">Welcome back, creator</p>
+                <p className="text-lg font-semibold text-white">
+                  Welcome back, {user?.name || user?.email || 'creator'}
+                </p>
               </div>
               <div className="flex items-center gap-3 text-sm text-slate-300">
                 <span className="hidden sm:inline">AI mode: On</span>

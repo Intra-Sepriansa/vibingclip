@@ -9,6 +9,7 @@ import { ProcessingController } from './processing.controller';
 import { ProcessingService } from './processing.service';
 import { FfmpegService } from './ffmpeg.service';
 import { VideoProcessingProcessor } from './processors/video-processors';
+import { LinkDownloaderService } from './link-downloader.service';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { VideoProcessingProcessor } from './processors/video-processors';
     AiBridgeModule
   ],
   controllers: [ProcessingController],
-  providers: [ProcessingService, FfmpegService, VideoProcessingProcessor],
+  providers: [ProcessingService, FfmpegService, VideoProcessingProcessor, LinkDownloaderService],
   exports: [ProcessingService]
 })
 export class ProcessingModule {}

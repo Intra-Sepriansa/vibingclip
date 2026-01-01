@@ -1,0 +1,53 @@
+<svg width="1200" height="360" viewBox="0 0 1200 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Vibing Clip aurora banner">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="45%" stop-color="#1E1B4B"/>
+      <stop offset="100%" stop-color="#0B1120"/>
+    </linearGradient>
+    <radialGradient id="orbA" cx="30%" cy="20%" r="60%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.95"/>
+      <stop offset="60%" stop-color="#7C3AED" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#0B1120" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="orbB" cx="70%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#34D399" stop-opacity="0.9"/>
+      <stop offset="60%" stop-color="#22D3EE" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#0B1120" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="orbC" cx="50%" cy="80%" r="70%">
+      <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.75"/>
+      <stop offset="70%" stop-color="#A855F7" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#0B1120" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="beam" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#22D3EE" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#A855F7" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#22D3EE" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="blur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="35"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="360" rx="36" fill="url(#bg)"/>
+  <g filter="url(#blur)">
+    <circle cx="200" cy="90" r="180" fill="url(#orbA)">
+      <animate attributeName="cx" values="200;260;200" dur="10s" repeatCount="indefinite"/>
+      <animate attributeName="cy" values="90;120;90" dur="12s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="840" cy="110" r="210" fill="url(#orbB)">
+      <animate attributeName="cx" values="840;900;840" dur="11s" repeatCount="indefinite"/>
+      <animate attributeName="cy" values="110;80;110" dur="9s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="620" cy="300" r="240" fill="url(#orbC)">
+      <animate attributeName="cx" values="620;560;620" dur="13s" repeatCount="indefinite"/>
+      <animate attributeName="cy" values="300;280;300" dur="8s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  <path d="M90 210 C260 130 420 140 560 210 C700 280 900 290 1110 210" fill="none" stroke="url(#beam)" stroke-width="6" stroke-linecap="round" stroke-dasharray="8 18">
+    <animate attributeName="stroke-dashoffset" values="0;52" dur="4s" repeatCount="indefinite"/>
+  </path>
+  <path d="M110 250 C320 160 520 170 680 240 C820 300 980 310 1080 250" fill="none" stroke="url(#beam)" stroke-width="3" stroke-linecap="round" opacity="0.6" stroke-dasharray="5 14">
+    <animate attributeName="stroke-dashoffset" values="0;38" dur="3.6s" repeatCount="indefinite"/>
+  </path>
+</svg>

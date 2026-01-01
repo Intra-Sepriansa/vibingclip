@@ -27,21 +27,31 @@ export const UploadPanel = () => {
     setSelectedFile(file.name);
     setIsProcessing(true);
     setFinished(false);
-    const created = await createFromUpload(file);
-    setCreatedProjectId(created.id);
-    setIsProcessing(false);
-    setFinished(true);
+    try {
+      const created = await createFromUpload(file);
+      setCreatedProjectId(created.id);
+      setFinished(true);
+    } catch (err) {
+      console.error('Upload failed', err);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleAnalyze = async () => {
     if (!link) return;
     setIsProcessing(true);
     setFinished(false);
-    const created = await createFromLink(link);
-    setCreatedProjectId(created.id);
-    setLink('');
-    setIsProcessing(false);
-    setFinished(true);
+    try {
+      const created = await createFromLink(link);
+      setCreatedProjectId(created.id);
+      setLink('');
+      setFinished(true);
+    } catch (err) {
+      console.error('Link analysis failed', err);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (

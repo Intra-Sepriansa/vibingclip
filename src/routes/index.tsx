@@ -6,16 +6,27 @@ import { DashboardPage } from '../pages/Dashboard/DashboardPage';
 import { ProjectDetailPage } from '../pages/ProjectDetail/ProjectDetailPage';
 import { ClipEditorPage } from '../pages/ClipEditor/ClipEditorPage';
 import { AnalyticsPage } from '../pages/Analytics/AnalyticsPage';
+import { LoginPage } from '../pages/Auth/LoginPage';
+import { RegisterPage } from '../pages/Auth/RegisterPage';
+import { RequireAuth } from './RequireAuth';
 
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <LandingLayout />,
-    children: [{ index: true, element: <LandingPage /> }]
+    children: [
+      { index: true, element: <LandingPage /> },
+      { path: 'login', element: <LandingPage /> },
+      { path: 'register', element: <LandingPage /> }
+    ]
   },
   {
     path: '/app',
-    element: <AppLayout />,
+    element: (
+      <RequireAuth>
+        <AppLayout />
+      </RequireAuth>
+    ),
     children: [
       { index: true, element: <Navigate to="dashboard" replace /> },
       { path: 'dashboard', element: <DashboardPage /> },

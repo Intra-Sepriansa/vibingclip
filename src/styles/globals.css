@@ -58,6 +58,12 @@ a {
   animation: logo-loop 28s linear infinite;
 }
 
+.animate-logo-loop-reverse {
+  display: inline-flex;
+  min-width: 200%;
+  animation: logo-loop 28s linear infinite reverse;
+}
+
 .logo-marquee {
   position: relative;
   overflow: hidden;

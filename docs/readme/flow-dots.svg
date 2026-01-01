@@ -1,0 +1,19 @@
+<svg width="360" height="40" viewBox="0 0 360 40" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Flow dots">
+  <defs>
+    <linearGradient id="flow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#22D3EE"/>
+      <stop offset="50%" stop-color="#A855F7"/>
+      <stop offset="100%" stop-color="#34D399"/>
+    </linearGradient>
+  </defs>
+  <rect width="360" height="40" rx="12" fill="#0B1120"/>
+  <line x1="24" y1="20" x2="336" y2="20" stroke="#1F2937" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="40" cy="20" r="6" fill="url(#flow)">
+    <animate attributeName="cx" values="40;320;40" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="90" cy="20" r="4" fill="#94A3B8" opacity="0.6"/>
+  <circle cx="150" cy="20" r="4" fill="#94A3B8" opacity="0.6"/>
+  <circle cx="210" cy="20" r="4" fill="#94A3B8" opacity="0.6"/>
+  <circle cx="270" cy="20" r="4" fill="#94A3B8" opacity="0.6"/>
+  <circle cx="330" cy="20" r="4" fill="#94A3B8" opacity="0.6"/>
+</svg>

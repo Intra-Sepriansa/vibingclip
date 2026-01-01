@@ -1,51 +1,31 @@
-import { PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { projects as initialMockProjects } from '../mocks/projects';
-import { Clip, Platform, Project } from '../types/project';
+import {
+  PropsWithChildren,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState
+} from 'react';
+import { projectsService } from '../services/projectsService';
+import { Project } from '../types/project';
+import { authService } from '../services/authService';
 
 interface ProjectsContextValue {
   projects: Project[];
   isLoading: boolean;
   error: Error | null;
+  refreshProjects: () => Promise<void>;
   createFromLink: (link: string) => Promise<Project>;
   createFromUpload: (file: File) => Promise<Project>;
+  fetchProjectById: (id: string) => Promise<Project | undefined>;
 }
 
 const ProjectsContext = createContext<ProjectsContextValue | undefined>(undefined);
 
-const platformFromLink = (link: string): Platform => {
-  if (/tiktok\.com/i.test(link)) return 'tiktok';
-  if (/instagram\.com|ig\.com/i.test(link)) return 'instagram';
-  if (/youtube\.com|youtu\.be/i.test(link)) return 'youtube';
-  return 'other';
-};
-
-const generateClips = (projectId: string, platform: Platform): Clip[] => {
-  const tags: Record<Platform, string[]> = {
-    youtube: ['Hook', 'Story', 'CTA'],
-    tiktok: ['Fast', 'Trend', 'Loop'],
-    instagram: ['Reel', 'Hook', 'Lifestyle'],
-    podcast: ['Snippet', 'Takeaway', 'Quote'],
-    other: ['Snippet', 'Highlight']
-  };
-
-  const baseTitles = [
-    'Opening hook that stops the scroll',
-    'Key insight worth sharing',
-    'Emotional moment that resonates'
-  ];
-
-  return baseTitles.map((title, idx) => ({
-    id: `${projectId}-clip-${idx + 1}`,
-    projectId,
-    title,
-    startTime: idx * 90 + 5,
-    endTime: idx * 90 + 45,
-    durationSeconds: 40,
-    viralityScore: 70 + idx * 7,
-    tags: tags[platform] ?? tags.other,
-    aspectRatio: platform === 'youtube' ? '16:9' : '9:16',
-    description: 'Auto-generated preview clip'
-  }));
+const withClips = async (project: Project) => {
+  const clips = await projectsService.fetchProjectClips(project.id);
+  return { ...project, clips };
 };
 
 export const ProjectsProvider = ({ children }: PropsWithChildren) => {
@@ -53,91 +33,115 @@ export const ProjectsProvider = ({ children }: PropsWithChildren) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
+  const upsertProject = useCallback((project: Project) => {
+    setProjects((prev) => {
+      const existingIndex = prev.findIndex((p) => p.id === project.id);
+      if (existingIndex >= 0) {
+        const updated = [...prev];
+        updated[existingIndex] = { ...project };
+        return updated;
+      }
+      return [project, ...prev];
+    });
+  }, []);
+
+  const refreshProjects = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const list = await projectsService.fetchProjects();
+      const hydrated = await Promise.all(
+        list.map(async (project) => {
+          try {
+            return await withClips(project);
+          } catch {
+            return { ...project, clips: [] };
+          }
+        })
+      );
+      setProjects(hydrated);
+      setError(null);
+    } catch (err) {
+      setError(err as Error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const fetchProjectById = useCallback(
+    async (id: string): Promise<Project | undefined> => {
       try {
-        setProjects(initialMockProjects);
+        const project = await projectsService.fetchProject(id);
+        const hydrated = await withClips(project);
+        upsertProject(hydrated);
+        return hydrated;
+      } catch (err) {
+        setError(err as Error);
+        return undefined;
+      }
+    },
+    [upsertProject]
+  );
+
+  const createFromLink = useCallback(
+    async (link: string): Promise<Project> => {
+      setIsLoading(true);
+      try {
+        const project = await projectsService.createFromLink(link);
+        const hydrated = await withClips(project);
+        upsertProject(hydrated);
+        return hydrated;
+      } catch (err) {
+        setError(err as Error);
+        throw err;
+      } finally {
         setIsLoading(false);
+      }
+    },
+    [upsertProject]
+  );
+
+  const createFromUpload = useCallback(
+    async (file: File): Promise<Project> => {
+      setIsLoading(true);
+      try {
+        const project = await projectsService.uploadVideo(file);
+        const hydrated = await withClips(project);
+        upsertProject(hydrated);
+        return hydrated;
+      } catch (err) {
+        setError(err as Error);
+        throw err;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [upsertProject]
+  );
+
+  useEffect(() => {
+    const bootstrap = async () => {
+      try {
+        await authService.ensureAuth();
+        await refreshProjects();
       } catch (err) {
         setError(err as Error);
         setIsLoading(false);
       }
-    }, 150);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  const createFromLink = async (link: string): Promise<Project> => {
-    const platform = platformFromLink(link);
-    const id = `p-${Date.now()}`;
-    const newProject: Project = {
-      id,
-      title: 'Imported video',
-      description: `Auto-imported from ${platform.toUpperCase()}`,
-      platform,
-      videoUrl: link,
-      thumbnailUrl: '',
-      durationSeconds: 2400,
-      status: 'processing',
-      createdAt: new Date().toISOString(),
-      clips: []
     };
-
-    setProjects((prev) => [newProject, ...prev]);
-
-    // Simulate AI processing and clip generation
-    setTimeout(() => {
-      setProjects((prev) =>
-        prev.map((project) =>
-          project.id === id
-            ? { ...project, status: 'completed', clips: generateClips(id, platform) }
-            : project
-        )
-      );
-    }, 1500);
-
-    return newProject;
-  };
-
-  const createFromUpload = async (file: File): Promise<Project> => {
-    const id = `p-${Date.now()}`;
-    const newProject: Project = {
-      id,
-      title: file.name.replace(/\.[^/.]+$/, '') || 'Uploaded video',
-      description: 'Uploaded file ready for AI analysis',
-      platform: 'other',
-      videoUrl: URL.createObjectURL(file),
-      thumbnailUrl: '',
-      durationSeconds: 1800,
-      status: 'processing',
-      createdAt: new Date().toISOString(),
-      clips: []
-    };
-
-    setProjects((prev) => [newProject, ...prev]);
-
-    setTimeout(() => {
-      setProjects((prev) =>
-        prev.map((project) =>
-          project.id === id
-            ? { ...project, status: 'completed', clips: generateClips(id, 'other') }
-            : project
-        )
-      );
-    }, 1500);
-
-    return newProject;
-  };
+    bootstrap();
+  }, [refreshProjects]);
 
   const value = useMemo(
     () => ({
       projects,
       isLoading,
       error,
+      refreshProjects,
       createFromLink,
-      createFromUpload
+      createFromUpload,
+      fetchProjectById
     }),
-    [projects, isLoading, error]
+    [projects, isLoading, error, refreshProjects, createFromLink, createFromUpload, fetchProjectById]
   );
 
   return <ProjectsContext.Provider value={value}>{children}</ProjectsContext.Provider>;

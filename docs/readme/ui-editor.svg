@@ -1,0 +1,36 @@
+<svg width="1200" height="720" viewBox="0 0 1200 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Vibing Clip editor UI">
+  <defs>
+    <linearGradient id="editor-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B1120"/>
+      <stop offset="50%" stop-color="#111827"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+    <linearGradient id="video" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="50%" stop-color="#7C3AED"/>
+      <stop offset="100%" stop-color="#22D3EE"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="720" rx="36" fill="url(#editor-bg)"/>
+  <rect x="40" y="40" width="1120" height="80" rx="24" fill="#0B0F1A" stroke="#1F2937"/>
+  <rect x="70" y="70" width="220" height="20" rx="10" fill="#94A3B8"/>
+  <rect x="960" y="60" width="160" height="40" rx="20" fill="#1F2937"/>
+
+  <rect x="40" y="140" width="760" height="420" rx="28" fill="#0B0F1A" stroke="#1F2937"/>
+  <rect x="70" y="170" width="700" height="340" rx="24" fill="url(#video)"/>
+  <polygon points="360,320 520,400 360,480" fill="#F8FAFC" opacity="0.8"/>
+
+  <rect x="820" y="140" width="340" height="420" rx="28" fill="#0B0F1A" stroke="#1F2937"/>
+  <rect x="850" y="180" width="280" height="16" rx="8" fill="#E2E8F0"/>
+  <rect x="850" y="210" width="200" height="14" rx="7" fill="#94A3B8"/>
+  <rect x="850" y="240" width="160" height="14" rx="7" fill="#64748B"/>
+  <rect x="850" y="280" width="260" height="100" rx="16" fill="#111827" stroke="#1F2937"/>
+  <rect x="850" y="400" width="260" height="120" rx="16" fill="#111827" stroke="#1F2937"/>
+
+  <rect x="40" y="580" width="1120" height="110" rx="24" fill="#0B0F1A" stroke="#1F2937"/>
+  <rect x="70" y="620" width="900" height="26" rx="13" fill="#1F2937"/>
+  <rect x="90" y="620" width="240" height="26" rx="13" fill="#22D3EE"/>
+  <rect x="350" y="620" width="200" height="26" rx="13" fill="#7C3AED"/>
+  <rect x="570" y="620" width="160" height="26" rx="13" fill="#34D399"/>
+  <rect x="980" y="610" width="140" height="46" rx="23" fill="#111827" stroke="#1F2937"/>
+</svg>

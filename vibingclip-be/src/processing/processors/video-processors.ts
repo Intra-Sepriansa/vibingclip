@@ -9,6 +9,7 @@ import { Project } from '../../projects/entities/project.entity';
 import { ProcessingJob, ProcessingJobStatus, ProcessingJobType } from '../entities/processing-job.entity';
 import { ProcessingService } from '../processing.service';
 import { FfmpegService } from '../ffmpeg.service';
+import { LinkDownloaderService } from '../link-downloader.service';
 
 @Injectable()
 @Processor('video-processing')
@@ -24,7 +25,8 @@ export class VideoProcessingProcessor extends WorkerHost {
     private readonly jobsRepo: Repository<ProcessingJob>,
     private readonly aiBridge: AiBridgeService,
     private readonly processingService: ProcessingService,
-    private readonly ffmpegService: FfmpegService
+    private readonly ffmpegService: FfmpegService,
+    private readonly linkDownloader: LinkDownloaderService
   ) {
     super();
   }
@@ -66,6 +68,19 @@ export class VideoProcessingProcessor extends WorkerHost {
   private async handleIngest(projectId: string) {
     try {
       await this.updateJobStatus(projectId, 'project.ingest', 'processing');
+      const project = await this.projectsRepo.findOne({ where: { id: projectId } });
+      if (!project) throw new Error('Project not found');
+
+      if (project.sourceType === 'link' && project.sourceUrl) {
+        const downloaded = await this.linkDownloader.download(project.sourceUrl, projectId);
+        project.originalFilePath = downloaded;
+        await this.projectsRepo.save(project);
+      }
+
+      if (!project.originalFilePath) {
+        throw new Error('No source file available for ingestion');
+      }
+
       await this.projectsRepo.update(projectId, { status: 'processing' });
       await this.processingService.enqueueNext(projectId, 'video.extract-metadata');
       await this.updateJobStatus(projectId, 'project.ingest', 'completed');
@@ -82,7 +97,8 @@ export class VideoProcessingProcessor extends WorkerHost {
       await this.updateJobStatus(projectId, 'video.extract-metadata', 'processing');
       const project = await this.projectsRepo.findOne({ where: { id: projectId } });
       if (!project) throw new Error('Project not found');
-      const targetPath = project.originalFilePath || project.sourceUrl || '';
+      const targetPath = project.originalFilePath || '';
+      if (!targetPath) throw new Error('No local file for metadata extraction');
       const metadata = await this.ffmpegService.getMetadata(targetPath);
       project.durationSeconds = metadata.durationSeconds;
       await this.projectsRepo.save(project);
@@ -101,8 +117,10 @@ export class VideoProcessingProcessor extends WorkerHost {
       await this.updateJobStatus(projectId, 'video.transcribe', 'processing');
       const project = await this.projectsRepo.findOne({ where: { id: projectId } });
       if (!project) throw new Error('Project not found');
-      const pathOrUrl = project.originalFilePath || project.sourceUrl || '';
-      const result = await this.aiBridge.transcribeAudio(pathOrUrl);
+      const pathOrUrl = project.originalFilePath || '';
+      if (!pathOrUrl) throw new Error('No media file to transcribe');
+      const audioPath = await this.ffmpegService.extractAudio(pathOrUrl, project.id);
+      const result = await this.aiBridge.transcribeAudio(audioPath);
       await this.processingService.enqueueNext(projectId, 'video.analyze', {
         transcript: result.transcript,
         language: result.language

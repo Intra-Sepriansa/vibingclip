@@ -64,13 +64,13 @@ export const Sidebar = () => {
           })}
         </nav>
       </div>
-      <div className="flex items-center gap-3 rounded-xl border border-slate-800 bg-slate-900/70 p-3">
+      <div className="flex items-center justify-between gap-3 rounded-xl border border-slate-800 bg-slate-900/70 p-3">
         <div className="h-10 w-10 rounded-full bg-gradient-to-r from-violet-500 to-emerald-400 text-center text-base font-semibold text-slate-900">
           <div className="flex h-full w-full items-center justify-center rounded-full bg-slate-950">VC</div>
         </div>
-        <div>
-          <p className="text-sm font-semibold text-white">Taylor Creator</p>
-          <p className="text-xs text-slate-400">Premium plan</p>
+        <div className="flex-1">
+          <p className="text-sm font-semibold text-white">Creator</p>
+          <p className="text-xs text-slate-400">Welcome</p>
         </div>
       </div>
     </aside>
