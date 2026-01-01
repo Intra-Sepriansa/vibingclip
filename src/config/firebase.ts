@@ -2,24 +2,14 @@ import { getApps, initializeApp, getApp } from 'firebase/app';
 import { getAnalytics, isSupported } from 'firebase/analytics';
 import { getAuth } from 'firebase/auth';
 
-const fallbackConfig = {
-  apiKey: 'REDACTED_FIREBASE_API_KEY',
-  authDomain: 'your-project.firebaseapp.com',
-  projectId: 'vibingclip',
-  storageBucket: 'your-project.appspot.com',
-  messagingSenderId: 'REDACTED_FIREBASE_SENDER_ID',
-  appId: 'REDACTED_FIREBASE_APP_ID',
-  measurementId: 'REDACTED_FIREBASE_MEASUREMENT_ID'
-};
-
 const config = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || fallbackConfig.apiKey,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || fallbackConfig.authDomain,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || fallbackConfig.projectId,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || fallbackConfig.storageBucket,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || fallbackConfig.messagingSenderId,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || fallbackConfig.appId,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || fallbackConfig.measurementId
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY ?? '',
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN ?? '',
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID ?? '',
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET ?? '',
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID ?? '',
+  appId: import.meta.env.VITE_FIREBASE_APP_ID ?? '',
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID ?? ''
 };
 
 const hasConfig = Boolean(
